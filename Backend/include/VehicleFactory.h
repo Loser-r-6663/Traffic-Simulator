@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
+#include <memory>
 
 class VehicleFactory
 {
@@ -13,12 +14,12 @@ class VehicleFactory
     ~VehicleFactory() {}
     VehicleFactory(const VehicleFactory &) = delete;
     VehicleFactory &operator=(const VehicleFactory &) = delete;
-    std::unordered_map<std::string, std::function<Vehicle*(int)>> registryMap;
+    std::unordered_map<std::string, std::function<std::shared_ptr<Vehicle>(int)>> registryMap;
 
     public:
     static VehicleFactory &getInstance();
-    void registerVehicle(const std::string &typeName, std::function<Vehicle*(int)> creator);
-    Vehicle *createVehicle(const std::string &typeName, int id);
+    void registerVehicle(const std::string &typeName, std::function<std::shared_ptr<Vehicle>(int)> creator);
+    std::shared_ptr<Vehicle> createVehicle(const std::string &typeName, int id);
 };
 
 

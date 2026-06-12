@@ -2,6 +2,8 @@
 #define Vehicle_h
 
 #include <string>
+#include <memory>
+#include "../lib/Vector2D.h"
 struct VehicleTemplate
 {
     std::string typeName;
@@ -24,10 +26,8 @@ class Vehicle
 private:
     int id;
     int typeId;
-    double posX;
-    double posY;
-    double curSpeed;
-    double direction;
+    Vector2D position;
+    Vector2D velocity;
     double curAcceleration;
 
 public:
@@ -38,14 +38,12 @@ public:
 
     int getId() const;
     int getTypeId() const;
-    double getPosX() const;
-    double getPosY() const;
-    double getCurSpeed() const;
-    double getDirection() const;
+    Vector2D getPosition() const;
+    Vector2D getVelocity() const;
     double getCurAcceleration() const;
-    void setPosition(double x, double y);
-    void setSpeed(double speed);
-    void setDirection(double direction);
+
+    void setPosition(const Vector2D &pos);
+    void setVelocity(const Vector2D &vel);
     void setAcceleration(double acceleration);
 };
 

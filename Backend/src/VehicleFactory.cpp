@@ -5,14 +5,14 @@ VehicleFactory &VehicleFactory::getInstance()
     static VehicleFactory instance;
     if (instance.registryMap.empty())
     {
-        instance.registerVehicle("Motorbike", [](int id) { return new Motorbike(id); });
-        instance.registerVehicle("Car", [](int id) { return new Car(id); });
-        instance.registerVehicle("Truck", [](int id) { return new Truck(id); });
+        instance.registerVehicle("Motorbike", [](int id) { return std::make_shared<Motorbike>(id); });
+        instance.registerVehicle("Car", [](int id) { return std::make_shared<Car>(id); });
+        instance.registerVehicle("Truck", [](int id) { return std::make_shared<Truck>(id); });
     }
     return instance;
 }
 
-Vehicle *VehicleFactory::createVehicle(const std::string &typeName, int id)
+std::shared_ptr<Vehicle> VehicleFactory::createVehicle(const std::string &typeName, int id)
 {
     auto it = registryMap.find(typeName);
     if (it != registryMap.end())
@@ -22,7 +22,7 @@ Vehicle *VehicleFactory::createVehicle(const std::string &typeName, int id)
     return nullptr;
 }
 
-void VehicleFactory::registerVehicle(const std::string &typeName, std::function<Vehicle*(int)> creator)
+void VehicleFactory::registerVehicle(const std::string &typeName, std::function<std::shared_ptr<Vehicle>(int)> creator)
 {
     registryMap[typeName] = creator;
 }
