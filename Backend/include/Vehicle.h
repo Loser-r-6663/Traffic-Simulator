@@ -4,6 +4,10 @@
 #include <string>
 #include <memory>
 #include "../lib/Vector2D.h"
+#include <vector>
+
+class Intersection;
+
 
 class Vehicle
 {
@@ -12,6 +16,9 @@ private:
     int typeId;
     Vector2D position;
     Vector2D velocity;
+    Intersection* targetIntersection;
+    std::vector<Intersection*> route;
+    size_t currentRouteIndex;
     double curAcceleration;
 
 public:
@@ -25,7 +32,11 @@ public:
     Vector2D getPosition() const;
     Vector2D getVelocity() const;
     double getCurAcceleration() const;
+    Intersection* getTargetIntersection() const;
 
+    void setNextTargetIntersection();
+    void setTargetIntersection(Intersection* intersection);
+    void setRoute(const std::vector<Intersection*>& route);
     void setPosition(const Vector2D &pos);
     void setVelocity(const Vector2D &vel);
     void setAcceleration(double acceleration);
