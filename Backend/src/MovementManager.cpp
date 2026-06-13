@@ -8,6 +8,10 @@
 #include "../include/Map.h"
 #include "../machine/PathFindingMachine.h"
 
+MovementManager::MovementManager() {}
+
+MovementManager::~MovementManager() {}
+
 MovementManager &MovementManager::getInstance()
 {
     static MovementManager instance;

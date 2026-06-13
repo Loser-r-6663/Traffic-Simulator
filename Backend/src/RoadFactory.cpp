@@ -1,6 +1,13 @@
 #include "../include/RoadFactory.h"
 #include "../include/Lane.h"
 #include "../lib/RoadTemplate.h"
+
+RoadFactory &RoadFactory::getInstance()
+{
+    static RoadFactory instance;
+    return instance;
+}
+
 std::shared_ptr<Road> RoadFactory::createRoad(const std::string &typeName, int id, Vector2D position, 
                                              std::shared_ptr<Intersection> startInter, 
                                              std::shared_ptr<Intersection> endInter)

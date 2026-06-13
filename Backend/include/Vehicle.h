@@ -57,18 +57,20 @@ public:
     void info() override;
 };
 class Car : public Vehicle
-{public:
+{
+public:
     Car();
     Car(int id);
     ~Car() override;
-    void info() override {}
+    void info() override;
 };
 class Truck : public Vehicle
-{public:
+{
+public:
     Truck();
     Truck(int id);
     ~Truck() override;
-    void info() override {}
+    void info() override;
 };
 
 #endif /* Vehicle_h */
