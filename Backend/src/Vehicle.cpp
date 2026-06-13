@@ -18,9 +18,13 @@ double Vehicle::getCurAcceleration() const { return curAcceleration; }
 
 Intersection *Vehicle::getTargetIntersection() const { return targetIntersection; }
 
-void Vehicle::setRoute(const std::vector<Intersection *> &newRoute)
+Intersection *Vehicle::getEndIntersection() const { return endIntersection; }
+
+void Vehicle::setRoute(const std::vector<std::shared_ptr<Intersection>> &newRoute)
 {
-    route = newRoute;
+    for(const auto& intersection : newRoute)
+        route.push_back(intersection.get());
+        
     currentRouteIndex = 0;
     if (!route.empty())
     {
@@ -51,6 +55,11 @@ void Vehicle::setVelocity(const Vector2D &vel) { velocity = vel; }
 void Vehicle::setAcceleration(double acceleration) { curAcceleration = acceleration; }
 
 void Vehicle::setTargetIntersection(Intersection *intersection) { targetIntersection = intersection; }
+
+void Vehicle::setEndIntersection(Intersection *intersection) { endIntersection = intersection; }
+
+bool Vehicle::hasRoute() const { return !route.empty(); }
+
 
 Motorbike::Motorbike() : Vehicle() {}
 Motorbike::Motorbike(int id) : Vehicle(id, 1) {}

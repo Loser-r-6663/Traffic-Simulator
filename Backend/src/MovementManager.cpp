@@ -5,6 +5,9 @@
 #include "../lib/VehicleTemplate.h"
 #include "../include/Intersection.h"
 
+#include "../include/Map.h"
+#include "../machine/PathFindingMachine.h"
+
 MovementManager &MovementManager::getInstance()
 {
     static MovementManager instance;
@@ -15,10 +18,11 @@ void MovementManager::addVehicle(std::shared_ptr<Vehicle> vehicle)
 {
     vehicles.push_back(vehicle);
 }
+
 void MovementManager::removeVehicle(std::shared_ptr<Vehicle> vehicle)
 {
     auto it = std::find(vehicles.begin(), vehicles.end(), vehicle);
-    if (it != vehicles.end())
+    if (it != vehicles.end() && it != vehicles.end())
     {
         vehicles.erase(it);
     }
@@ -41,10 +45,9 @@ void MovementManager::handleIntersectionArrival(Vehicle *vehicle)
 
         Vector2D direction = nextPos - curPos;
         double dist = distance(curPos, nextPos);
-        const double EPSILON = 0.5;
-        if (dist > EPSILON)
-        {
 
+        if (dist > 0.5f)
+        {
             double maxSpeed = 0.0;
             for (const auto &tpl : VEHICLE_TEMPLATES)
             {
@@ -72,6 +75,7 @@ void MovementManager::normalMove(Vehicle *vehicle, float deltaTime)
     Vector2D newPos = curPosition + curVelocity * deltaTime;
     vehicle->setPosition(newPos);
 }
+
 void MovementManager::update(float deltaTime)
 {
     for (auto &vehiclePtr : vehicles)
@@ -79,6 +83,21 @@ void MovementManager::update(float deltaTime)
         Vehicle *vehicle = vehiclePtr.get();
         if (vehicle == nullptr)
             continue;
+
+        if (!vehicle->hasRoute() && vehicle->getEndIntersection() != nullptr && vehicle->getTargetIntersection() != nullptr)
+        {
+            std::shared_ptr<Intersection> startNodeSmart = Map::getInstance().getIntersection(vehicle->getTargetIntersection()->getId());
+            std::shared_ptr<Intersection> endNodeSmart = Map::getInstance().getIntersection(vehicle->getEndIntersection()->getId());
+
+            if (startNodeSmart != nullptr && endNodeSmart != nullptr)
+            {
+                auto calculatedPath = PathfindingMachine::getInstance().findPath(startNodeSmart, endNodeSmart);
+
+                vehicle->setRoute(calculatedPath);
+
+                handleIntersectionArrival(vehicle);
+            }
+        }
 
         if (vehicle->getTargetIntersection() != nullptr)
         {
@@ -91,8 +110,8 @@ void MovementManager::update(float deltaTime)
             {
                 handleIntersectionArrival(vehicle);
             }
-        }
 
-        normalMove(vehicle, deltaTime);
+            normalMove(vehicle, deltaTime);
+        }
     }
 }

@@ -17,6 +17,7 @@ private:
     Vector2D position;
     Vector2D velocity;
     Intersection* targetIntersection;
+    Intersection* endIntersection;
     std::vector<Intersection*> route;
     size_t currentRouteIndex;
     double curAcceleration;
@@ -33,13 +34,18 @@ public:
     Vector2D getVelocity() const;
     double getCurAcceleration() const;
     Intersection* getTargetIntersection() const;
+    Intersection* getEndIntersection() const;
+
 
     void setNextTargetIntersection();
     void setTargetIntersection(Intersection* intersection);
-    void setRoute(const std::vector<Intersection*>& route);
+    void setEndIntersection(Intersection* intersection);
+    void setRoute(const std::vector<std::shared_ptr<Intersection>>& route);
     void setPosition(const Vector2D &pos);
     void setVelocity(const Vector2D &vel);
     void setAcceleration(double acceleration);
+
+    bool hasRoute() const;
 };
 
 class Motorbike : public Vehicle
