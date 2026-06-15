@@ -1,4 +1,11 @@
 #include "../include/VehicleFactory.h"
+#include "../include/Vehicle.h"
+#include "../lib/VehicleTemplate.h"
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 VehicleFactory &VehicleFactory::getInstance()
 {
@@ -10,6 +17,11 @@ VehicleFactory &VehicleFactory::getInstance()
         instance.registerVehicle("Truck", [](int id) { return std::make_shared<Truck>(id); });
     }
     return instance;
+}
+
+std::unordered_map<int, VehicleTemplate> &VehicleFactory::getRegistryTemplates()
+{
+    return registryTemplates;
 }
 
 std::shared_ptr<Vehicle> VehicleFactory::createVehicle(const std::string &typeName, int id)
@@ -25,4 +37,35 @@ std::shared_ptr<Vehicle> VehicleFactory::createVehicle(const std::string &typeNa
 void VehicleFactory::registerVehicle(const std::string &typeName, std::function<std::shared_ptr<Vehicle>(int)> creator)
 {
     registryMap[typeName] = creator;
+}
+
+void VehicleFactory::loadTemplatesFromFile(const std::string &filePath)
+{
+    std::ifstream file(filePath);
+    if (!file.is_open())
+    {
+        std::cerr << "Khong the mo file: " << filePath << std::endl;
+        return;
+    }
+
+    json data;
+    file >> data;
+    for (const auto &item : data["vehicles"])
+    {
+        std::string typeName = item["typeName"];
+        int typeId = item["typeId"];
+        double maxSpeed = item["maxSpeed"];
+        double lenght = item["length"];
+        double width = item["width"];
+        double acceleration = item["acceleration"];
+        double deceleration = item["deceleration"];
+
+        VehicleTemplate templateData(typeName, typeId, lenght, width, maxSpeed, acceleration);
+        registerTemplate(typeId, templateData);
+    }
+}
+
+void VehicleFactory::registerTemplate(const int &typeId, const VehicleTemplate &templateData)
+{
+    registryTemplates.insert_or_assign(templateData.typeId, templateData);
 }

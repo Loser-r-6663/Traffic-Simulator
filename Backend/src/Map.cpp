@@ -1,5 +1,6 @@
 #include "../include/Map.h"
 #include "../include/Intersection.h"
+#include "../include/Road.h"
 #include <random>
 
 Map::Map() {}
@@ -19,6 +20,11 @@ void Map::addIntersection(std::shared_ptr<Intersection> intersection)
 void Map::addRoad(std::shared_ptr<Road> road)
 {
     roads.push_back(road);
+    if (road->startIntersections && road->endIntersections)
+    {
+        road->startIntersections->outgoingRoads.push_back(road);
+        road->endIntersections->incomingRoads.push_back(road);
+    }
 }
 
 const std::vector<std::shared_ptr<Intersection>> &Map::getAllIntersections() const
@@ -35,7 +41,7 @@ std::shared_ptr<Intersection> Map::getRandomIntersection() const
     if (intersections.empty())
     {
         return nullptr;
-    }   
+    }
 
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -43,7 +49,7 @@ std::shared_ptr<Intersection> Map::getRandomIntersection() const
 
     return intersections[dis(gen)];
 }
-    
+
 std::shared_ptr<Intersection> Map::getIntersection(int id) const
 {
     auto it = intersectionLookup.find(id);
@@ -54,9 +60,12 @@ std::shared_ptr<Intersection> Map::getIntersection(int id) const
     return nullptr;
 }
 
-void Map::clear() {
-    for (auto& intersection : intersections) {
-        if (intersection) {
+void Map::clear()
+{
+    for (auto &intersection : intersections)
+    {
+        if (intersection)
+        {
             intersection->incomingRoads.clear();
             intersection->outgoingRoads.clear();
         }

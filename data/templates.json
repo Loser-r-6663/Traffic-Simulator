@@ -1,0 +1,35 @@
+{
+  "vehicle_templates": [
+    {
+      "typeId": 1,
+      "typeName": "Motorbike",
+      "maxSpeed": 40.0,
+      "acceleration": 3.0,
+      "length": 2.0,
+      "width": 0.8
+    },
+
+    {
+      "typeId": 2,
+      "typeName": "Car",
+      "maxSpeed": 60.0,
+      "acceleration": 2.0,
+      "length": 4.5,
+      "width": 1.8
+    },
+
+    {
+      "typeId": 3,
+      "typeName": "Truck",
+      "maxSpeed": 30.0,
+      "acceleration": 0.8,
+      "length": 6.0,
+      "width": 2.0
+    }
+  ],
+  "road_templates": [
+    { "typeId": 1, "typeName": "UrbanStreet", "numLanes": 2, "maxSpeed": 50.0 },
+    { "typeId": 2, "typeName": "Highway", "numLanes": 3, "maxSpeed": 120.0 },
+    { "typeId": 3, "typeName": "Alley", "numLanes": 1, "maxSpeed": 20.0 }
+  ]
+}

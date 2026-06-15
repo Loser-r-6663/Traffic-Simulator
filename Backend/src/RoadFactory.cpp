@@ -1,6 +1,12 @@
 #include "../include/RoadFactory.h"
 #include "../include/Lane.h"
 #include "../lib/RoadTemplate.h"
+#include <nlohmann/json.hpp>
+
+#include <fstream>
+#include <iostream>
+
+using json = nlohmann::json;
 
 RoadFactory &RoadFactory::getInstance()
 {
@@ -27,4 +33,33 @@ std::shared_ptr<Road> RoadFactory::createRoad(const std::string &typeName, int i
     }
     
     return road;
+}
+
+void RoadFactory::registerTemplate(const int &typeId, const RoadTemplate &templateData)
+{
+    registryTemplates.insert_or_assign(templateData.typeName, templateData);
+}
+
+void RoadFactory::loadTemplatesFromFile(const std::string &filePath)
+{
+    std::ifstream file(filePath);
+    if (!file.is_open())
+    {
+        std::cerr << "Khong the mo file: " << filePath << std::endl;
+        return;
+    }
+
+    json data;
+    file >> data;
+
+    for (const auto &item : data["roads"])
+    {
+        std::string typeName = item["typeName"];
+        int typeId = item["typeId"];
+        int numLanes = item["numLanes"];
+        double maxSpeed = item["maxSpeed"];
+
+        RoadTemplate templateData(typeName, typeId, numLanes, maxSpeed);
+        registerTemplate(typeId, templateData);
+    }
 }

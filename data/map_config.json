@@ -1,0 +1,11 @@
+{
+  "intersections": [
+    { "id": 1, "x": 10.0, "y": 20.0 },
+    { "id": 2, "x": 100.0, "y": 20.0 },
+    { "id": 3, "x": 100.0, "y": 100.0 }
+  ],
+  "roads": [
+    { "id": 101, "start_node": 1, "end_node": 2, "typeId": 1 },
+    { "id": 102, "start_node": 2, "end_node": 3, "typeId": 1 }
+  ]
+}

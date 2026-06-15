@@ -5,6 +5,8 @@
 #include "../include/Vehicle.h"
 #include "../include/Map.h"
 #include "../lib/VehicleTemplate.h"
+
+
 #include <random>
 #include <iostream>
 
@@ -83,14 +85,23 @@ void SpawnManager::update(float deltaTime)
 
         if (start != nullptr && end != nullptr)
         {
-            size_t numTemplates = sizeof(VEHICLE_TEMPLATES) / sizeof(VEHICLE_TEMPLATES[0]);
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<size_t> dis(0, numTemplates - 1);
-            size_t randomIndex = dis(gen);
-            const std::string &randomType = VEHICLE_TEMPLATES[randomIndex].typeName;
+            auto &templates = VehicleFactory::getInstance().getRegistryTemplates();
+            std::vector<std::string> typeNames;
+            typeNames.reserve(templates.size());
+            for (const auto &entry : templates)
+            {
+                typeNames.push_back(entry.second.typeName);
+            }
 
-            spawnVehicle(randomType, start.get(), end.get());
+            if (!typeNames.empty())
+            {
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<size_t> dis(0, typeNames.size() - 1);
+                size_t randomIndex = dis(gen);
+                std::string randomType = typeNames[randomIndex];
+                spawnVehicle(randomType, start.get(), end.get());
+            }
         }
     }
 }
