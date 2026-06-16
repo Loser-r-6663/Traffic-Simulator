@@ -119,3 +119,8 @@ void MovementManager::update(float deltaTime)
         }
     }
 }
+
+std::vector<std::shared_ptr<Vehicle>> MovementManager::getVehicles()
+{
+    return vehicles;
+}

@@ -24,6 +24,7 @@ class MovementManager
         void addVehicle(std::shared_ptr<Vehicle> vehicle);
         void removeVehicle(std::shared_ptr<Vehicle> vehicle);
         void update(float deltaTime);
+        std::vector<std::shared_ptr<Vehicle>> getVehicles();
 
 };
 

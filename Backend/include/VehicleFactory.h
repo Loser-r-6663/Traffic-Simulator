@@ -2,12 +2,11 @@
 #define VehicleFactory_h
 
 #include "Vehicle.h"
+#include "../lib/VehicleTemplate.h"
 #include <unordered_map>
 #include <string>
 #include <functional>
 #include <memory>
-
-class VehicleTemplate;
 
 class VehicleFactory
 {

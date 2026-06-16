@@ -50,7 +50,7 @@ void VehicleFactory::loadTemplatesFromFile(const std::string &filePath)
 
     json data;
     file >> data;
-    for (const auto &item : data["vehicles"])
+    for (const auto &item : data["vehicle_templates"])
     {
         std::string typeName = item["typeName"];
         int typeId = item["typeId"];
@@ -58,7 +58,7 @@ void VehicleFactory::loadTemplatesFromFile(const std::string &filePath)
         double lenght = item["length"];
         double width = item["width"];
         double acceleration = item["acceleration"];
-        double deceleration = item["deceleration"];
+        double deceleration = item.value("deceleration", 0.0);
 
         VehicleTemplate templateData(typeName, typeId, lenght, width, maxSpeed, acceleration);
         registerTemplate(typeId, templateData);

@@ -14,30 +14,53 @@ RoadFactory &RoadFactory::getInstance()
     return instance;
 }
 
-std::shared_ptr<Road> RoadFactory::createRoad(const std::string &typeName, int id, Vector2D position, 
+std::shared_ptr<Road> RoadFactory::createRoad(int typeId, int id, Vector2D position, 
                                              std::shared_ptr<Intersection> startInter, 
                                              std::shared_ptr<Intersection> endInter)
 {
     auto road = std::make_shared<Road>(id, position, startInter, endInter);
-    
-    for (const auto& tmpl : ROAD_TEMPLATES) {
-        if (tmpl.typeName == typeName) {
-            for (int i = 0; i < tmpl.numLanes; ++i) {
-                int laneId = id * 10 + (i + 1);
-                auto lane = std::make_shared<Lane>(laneId, position);
-                lane->setMaxSpeed(tmpl.maxSpeed);
-                road->addLane(lane);
+
+    RoadTemplate templateData("", 0, 1, 0.0);
+    bool foundTemplate = false;
+
+    auto it = registryTemplates.find(typeId);
+    if (it != registryTemplates.end())
+    {
+        templateData = it->second;
+        foundTemplate = true;
+    }
+    else
+    {
+        for (const auto& tmpl : ROAD_TEMPLATES)
+        {
+            if (tmpl.typeId == typeId)
+            {
+                templateData = tmpl;
+                foundTemplate = true;
+                break;
             }
-            break;
         }
+    }
+
+    if (!foundTemplate)
+    {
+        std::cerr << "[RoadFactory] Khong tim thay template cho road typeId=" << typeId << ". Su dung mac dinh.\n";
+        templateData = ROAD_TEMPLATES[0];
+    }
+
+    for (int i = 0; i < templateData.numLanes; ++i) {
+        int laneId = id * 10 + (i + 1);
+        auto lane = std::make_shared<Lane>(laneId, position);
+        lane->setMaxSpeed(templateData.maxSpeed);
+        road->addLane(lane);
     }
     
     return road;
 }
 
-void RoadFactory::registerTemplate(const int &typeId, const RoadTemplate &templateData)
+void RoadFactory::registerTemplate(int typeId, const RoadTemplate &templateData)
 {
-    registryTemplates.insert_or_assign(templateData.typeName, templateData);
+    registryTemplates.insert_or_assign(typeId, templateData);
 }
 
 void RoadFactory::loadTemplatesFromFile(const std::string &filePath)
@@ -52,7 +75,7 @@ void RoadFactory::loadTemplatesFromFile(const std::string &filePath)
     json data;
     file >> data;
 
-    for (const auto &item : data["roads"])
+    for (const auto &item : data["road_templates"])
     {
         std::string typeName = item["typeName"];
         int typeId = item["typeId"];

@@ -2,6 +2,7 @@
 #include "../include/Map.h"
 #include "../include/Intersection.h"
 #include "../include/Road.h"
+#include "../include/RoadFactory.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -34,11 +35,16 @@ bool MapLoader::loadMap(const std::string &filePath)
     {
         auto start = Map::getInstance().getIntersection(item["start_node"]);
         auto end = Map::getInstance().getIntersection(item["end_node"]);
+        int typeId = item.value("typeId", 0);
 
         if (start && end)
         {
-            // Khởi tạo Road với Intersection thay vì Vector2D nếu cần thiết
-            auto road = std::make_shared<Road>(item["id"], Vector2D{0, 0}, start, end);
+            Vector2D position{
+                (start->getPosition().x + end->getPosition().x) / 2.0f,
+                (start->getPosition().y + end->getPosition().y) / 2.0f
+            };
+
+            auto road = RoadFactory::getInstance().createRoad(typeId, item["id"], position, start, end);
             Map::getInstance().addRoad(road);
         }
     }

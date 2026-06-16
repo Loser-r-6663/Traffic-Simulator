@@ -1,5 +1,6 @@
 #include "../machine/SimulationManager.h"
 #include "../machine/MovementManager.h"
+#include "../machine/SpawnManager.h"
 #include <thread>
 #include <iostream>
 
@@ -40,7 +41,7 @@ void SimulationManager::start()
 
         MovementManager::getInstance().update(deltaTime);
 
-        // SpawnManager::getInstance().update(deltaTime);
+        SpawnManager::getInstance().update(deltaTime);
         // DataLayer::getInstance().writeCache();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
