@@ -9,6 +9,7 @@
 #include "machine/SimulationManager.h"
 #include "machine/SpawnManager.h"
 #include "machine/MovementManager.h"
+#include "machine/DespawnManager.h"
 #include "include/VehicleFactory.h"
 #include "include/RoadFactory.h"
 #include "include/Map.h"
@@ -148,7 +149,7 @@ int main()
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
         if (bytesReceived <= 0)
         {
-            std::cout << "Client ngat ket noi";
+            std::cout << "Client ngat ket noi \n";
             break;
         }
         auto currentFrameTime = std::chrono::steady_clock::now();
@@ -161,10 +162,11 @@ int main()
             deltaTime = 0.1f;
 
         MovementManager::getInstance().update(deltaTime);
-
+        
         std::vector<vehiclePacked> packedVehicles;
         int cnt = 0;
-        std::vector<std::shared_ptr<Vehicle>> vehicles = MovementManager::getInstance().getVehicles();
+        auto &vehicles = MovementManager::getInstance().getVehicles();
+        DespawnManager::getInstance().process(vehicles);
         for (auto const &vehicle : vehicles)
         {
             vehiclePacked packedVehicle;
@@ -188,7 +190,11 @@ int main()
         if (startIntersection && endIntersection)
         {
             SpawnManager::getInstance().spawnVehicle("Car", startIntersection.get(), endIntersection.get());
+            SpawnManager::getInstance().spawnVehicle("Motorbike",startIntersection.get(),endIntersection.get());
+            SpawnManager::getInstance().spawnVehicle("Truck",startIntersection.get(),endIntersection.get());
         }
+
+        
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
@@ -197,3 +203,5 @@ int main()
     WSACleanup();
     return 0;
 }
+
+// g++ Backend/mainBE.cpp  Backend/src/*.cpp -I Backend/include -I Backend/lib -I Backend/machine -I . -o mainBeTest -lws2_32

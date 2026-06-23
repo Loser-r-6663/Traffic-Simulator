@@ -4,7 +4,7 @@
 
 Vehicle::Vehicle() : id(0), typeId(0), position(0.0f, 0.0f), velocity(0.0f, 0.0f), curAcceleration(0.0) {}
 Vehicle::Vehicle(int id, int typeId) : id(id), typeId(typeId), position(0.0, 0.0), velocity(0.0, 0.0), curAcceleration(0.0) {}
-Vehicle::~Vehicle() {}
+Vehicle::~Vehicle() { std::cout<<"Da huy xe [ID]: " <<id << std::endl;}
 
 int Vehicle::getId() const { return id; }
 
@@ -22,9 +22,9 @@ Intersection *Vehicle::getEndIntersection() const { return endIntersection; }
 
 void Vehicle::setRoute(const std::vector<std::shared_ptr<Intersection>> &newRoute)
 {
-    for(const auto& intersection : newRoute)
+    for (const auto &intersection : newRoute)
         route.push_back(intersection.get());
-        
+
     currentRouteIndex = 0;
     if (!route.empty())
     {
@@ -58,8 +58,11 @@ void Vehicle::setTargetIntersection(Intersection *intersection) { targetIntersec
 
 void Vehicle::setEndIntersection(Intersection *intersection) { endIntersection = intersection; }
 
+void Vehicle::setDespawn(bool isDespawn) { needDespawn = isDespawn; }
+
 bool Vehicle::hasRoute() const { return !route.empty(); }
 
+bool Vehicle::isNeedDespawn() const { return needDespawn; }
 
 Motorbike::Motorbike() : Vehicle() {}
 Motorbike::Motorbike(int id) : Vehicle(id, 1) {}

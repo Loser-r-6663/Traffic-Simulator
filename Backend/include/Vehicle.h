@@ -21,6 +21,7 @@ private:
     std::vector<Intersection*> route;
     size_t currentRouteIndex;
     double curAcceleration;
+    bool needDespawn = false;
 
 public:
     Vehicle();
@@ -44,8 +45,10 @@ public:
     void setPosition(const Vector2D &pos);
     void setVelocity(const Vector2D &vel);
     void setAcceleration(double acceleration);
+    void setDespawn(bool isDespawn);
 
     bool hasRoute() const;
+    bool isNeedDespawn() const;
 };
 
 class Motorbike : public Vehicle
