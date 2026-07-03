@@ -16,9 +16,9 @@ private:
     int typeId;
     Vector2D position;
     Vector2D velocity;
-    Intersection* targetIntersection;
-    Intersection* endIntersection;
-    std::vector<Intersection*> route;
+    std::shared_ptr<Intersection> targetIntersection;
+    std::shared_ptr<Intersection> endIntersection;
+    std::vector<std::shared_ptr<Intersection>> route;
     size_t currentRouteIndex;
     double curAcceleration;
     bool needDespawn = false;
@@ -34,13 +34,13 @@ public:
     Vector2D getPosition() const;
     Vector2D getVelocity() const;
     double getCurAcceleration() const;
-    Intersection* getTargetIntersection() const;
-    Intersection* getEndIntersection() const;
+    std::shared_ptr<Intersection> getTargetIntersection() const;
+    std::shared_ptr<Intersection> getEndIntersection() const;
 
 
     void setNextTargetIntersection();
-    void setTargetIntersection(Intersection* intersection);
-    void setEndIntersection(Intersection* intersection);
+    void setTargetIntersection(std::shared_ptr<Intersection> intersection);
+    void setEndIntersection(std::shared_ptr<Intersection> intersection);
     void setRoute(const std::vector<std::shared_ptr<Intersection>>& route);
     void setPosition(const Vector2D &pos);
     void setVelocity(const Vector2D &vel);

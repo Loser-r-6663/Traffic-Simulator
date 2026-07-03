@@ -31,7 +31,7 @@ double MovementManager::distance(Vector2D pos1, Vector2D pos2)
 void MovementManager::handleIntersectionArrival(Vehicle *vehicle)
 {
     vehicle->setNextTargetIntersection();
-    Intersection *nextTarget = vehicle->getTargetIntersection();
+    Intersection *nextTarget = vehicle->getTargetIntersection().get();
 
     if (nextTarget != nullptr)
     {
