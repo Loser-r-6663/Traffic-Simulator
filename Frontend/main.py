@@ -84,8 +84,6 @@ while running:
     for vehicle in world_objects:
         render.render_vehicle(vehicle, screen)
     
-    
-    
     pygame.display.flip()
     clock.tick(60) #60 fps
 pygame.quit()

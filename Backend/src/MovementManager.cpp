@@ -23,15 +23,6 @@ void MovementManager::addVehicle(std::shared_ptr<Vehicle> vehicle)
     vehicles.push_back(vehicle);
 }
 
-void MovementManager::removeVehicle(std::shared_ptr<Vehicle> vehicle)
-{
-    auto it = std::find(vehicles.begin(), vehicles.end(), vehicle);
-    if (it != vehicles.end() && it != vehicles.end())
-    {
-        vehicles.erase(it);
-    }
-}
-
 double MovementManager::distance(Vector2D pos1, Vector2D pos2)
 {
     return std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.y - pos2.y, 2));
@@ -40,7 +31,7 @@ double MovementManager::distance(Vector2D pos1, Vector2D pos2)
 void MovementManager::handleIntersectionArrival(Vehicle *vehicle)
 {
     vehicle->setNextTargetIntersection();
-    Intersection *nextTarget = vehicle->getTargetIntersection();
+    Intersection *nextTarget = vehicle->getTargetIntersection().get();
 
     if (nextTarget != nullptr)
     {
@@ -82,20 +73,21 @@ void MovementManager::normalMove(Vehicle *vehicle, float deltaTime)
 
 void MovementManager::update(float deltaTime)
 {
+    const double EPSILON = 2;
     for (auto &vehiclePtr : vehicles)
     {
         Vehicle *vehicle = vehiclePtr.get();
-        if (vehicle == nullptr)
+        if (vehicle == nullptr || vehicle->isNeedDespawn())
             continue;
 
         if (!vehicle->hasRoute() && vehicle->getEndIntersection() != nullptr && vehicle->getTargetIntersection() != nullptr)
         {
-            std::shared_ptr<Intersection> startNodeSmart = Map::getInstance().getIntersection(vehicle->getTargetIntersection()->getId());
-            std::shared_ptr<Intersection> endNodeSmart = Map::getInstance().getIntersection(vehicle->getEndIntersection()->getId());
+            std::shared_ptr<Intersection> startNode = Map::getInstance().getIntersection(vehicle->getTargetIntersection()->getId());
+            std::shared_ptr<Intersection> endNode = Map::getInstance().getIntersection(vehicle->getEndIntersection()->getId());
 
-            if (startNodeSmart != nullptr && endNodeSmart != nullptr)
+            if (startNode != nullptr && endNode != nullptr)
             {
-                auto calculatedPath = PathfindingMachine::getInstance().findPath(startNodeSmart, endNodeSmart);
+                auto calculatedPath = PathfindingMachine::getInstance().findPath(startNode, endNode);
 
                 vehicle->setRoute(calculatedPath);
 
@@ -108,8 +100,6 @@ void MovementManager::update(float deltaTime)
             Vector2D curPos = vehicle->getPosition();
             Vector2D targetPos = vehicle->getTargetIntersection()->getPosition();
 
-            const double EPSILON = 0.5;
-
             if (distance(curPos, targetPos) < EPSILON)
             {
                 handleIntersectionArrival(vehicle);
@@ -117,10 +107,14 @@ void MovementManager::update(float deltaTime)
 
             normalMove(vehicle, deltaTime);
         }
+        if (distance(vehicle->getPosition(), vehicle->getEndIntersection()->getPosition()) < EPSILON)
+        {
+            vehicle->setDespawn(true);
+        }
     }
 }
 
-std::vector<std::shared_ptr<Vehicle>> MovementManager::getVehicles()
+std::vector<std::shared_ptr<Vehicle>> &MovementManager::getVehicles()
 {
     return vehicles;
 }
