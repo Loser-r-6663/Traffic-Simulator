@@ -6,7 +6,6 @@
 #include "../include/Map.h"
 #include "../lib/VehicleTemplate.h"
 
-
 #include <random>
 #include <iostream>
 
@@ -32,8 +31,8 @@ void SpawnManager::initialize(float interval, bool enableAuto)
 }
 
 std::shared_ptr<Vehicle> SpawnManager::spawnVehicle(const std::string &vehicleType,
-                                                    Intersection *startIntersection,
-                                                    Intersection *endIntersection)
+                                                    std::shared_ptr<Intersection> startIntersection,
+                                                    std::shared_ptr<Intersection> endIntersection)
 {
     if (startIntersection == nullptr || endIntersection == nullptr)
     {
@@ -100,7 +99,7 @@ void SpawnManager::update(float deltaTime)
                 std::uniform_int_distribution<size_t> dis(0, typeNames.size() - 1);
                 size_t randomIndex = dis(gen);
                 std::string randomType = typeNames[randomIndex];
-                spawnVehicle(randomType, start.get(), end.get());
+                spawnVehicle(randomType, start, end);
             }
         }
     }

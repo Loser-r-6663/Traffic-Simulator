@@ -135,7 +135,7 @@ int main()
     auto endIntersection = Map::getInstance().getIntersection(3);
     if (startIntersection && endIntersection)
     {
-        SpawnManager::getInstance().spawnVehicle("Car", startIntersection.get(), endIntersection.get());
+        SpawnManager::getInstance().spawnVehicle("Car", startIntersection, endIntersection);
     }
     std::cout << "[MAIN] Spawn xe thanh cong" << std::endl;
     std::cout.flush();
@@ -189,9 +189,9 @@ int main()
         auto endIntersection = Map::getInstance().getRandomIntersection();
         if (startIntersection && endIntersection)
         {
-            SpawnManager::getInstance().spawnVehicle("Car", startIntersection.get(), endIntersection.get());
-            SpawnManager::getInstance().spawnVehicle("Motorbike",startIntersection.get(),endIntersection.get());
-            SpawnManager::getInstance().spawnVehicle("Truck",startIntersection.get(),endIntersection.get());
+            SpawnManager::getInstance().spawnVehicle("Car", startIntersection, endIntersection);
+            SpawnManager::getInstance().spawnVehicle("Motorbike",startIntersection,endIntersection);
+            SpawnManager::getInstance().spawnVehicle("Truck",startIntersection,endIntersection);
         }
 
         

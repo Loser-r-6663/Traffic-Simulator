@@ -28,8 +28,8 @@ public:
     void initialize(float interval = 3.0f, bool enableAuto = false);
 
     std::shared_ptr<Vehicle> spawnVehicle(const std::string &vehicleType,
-                                          Intersection *startIntersection,
-                                          Intersection *endIntersection);
+                                          std::shared_ptr<Intersection> startIntersection,
+                                          std::shared_ptr<Intersection> endIntersection);
 
     void update(float deltaTime);
 
