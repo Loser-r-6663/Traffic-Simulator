@@ -10,8 +10,8 @@
 #include "machine/SpawnManager.h"
 #include "machine/MovementManager.h"
 #include "machine/DespawnManager.h"
-#include "include/VehicleFactory.h"
-#include "include/RoadFactory.h"
+#include "machine/VehicleFactory.h"
+#include "machine/RoadFactory.h"
 #include "include/Map.h"
 
 SOCKET clientSocket;

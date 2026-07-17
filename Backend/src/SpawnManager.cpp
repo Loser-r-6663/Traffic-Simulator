@@ -1,6 +1,6 @@
 #include "../machine/SpawnManager.h"
 #include "../machine/MovementManager.h"
-#include "../include/VehicleFactory.h"
+#include "../machine/VehicleFactory.h"
 #include "../include/Intersection.h"
 #include "../include/Vehicle.h"
 #include "../include/Map.h"

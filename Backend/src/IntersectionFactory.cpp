@@ -1,4 +1,4 @@
-#include "../include/IntersectionFactory.h"
+#include "../machine/IntersectionFactory.h"
 
 IntersectionFactory &IntersectionFactory::getInstance()
 {
